@@ -1,0 +1,4 @@
+@import "./pages/index.css";
+.profile__image {
+  background-image: url('./images/avatar.jpg');
+}
