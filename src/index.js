@@ -1,4 +1,4 @@
-import { initialCards, renderCards, insertCard } from "./components/cards.js";
+import { initialCards, createCard, deleteCard, likeCard } from "./components/cards.js";
 import { showPopup, closePopup, closePopupEsc } from "./components/modal.js";
 import "./components/modal.js";
 import "./index.css";
@@ -85,4 +85,24 @@ popupAddCloseButton.addEventListener("click", (evt) => {
 popupImageCloseButton.addEventListener("click", (evt) => {
   closePopup(popupTypeImage);
 });
+//Функция отображения карточки
+function showCard(cardElement, popup) {
+  let cardImage = popup.querySelector(".popup__image");
+  let cardCaption = popup.querySelector(".popup__caption");
+  cardImage.src = cardElement.link;
+  cardImage.alt = cardElement.name;
+  cardCaption.textContent = cardElement.name;
+  showPopup(popup);
+}
+//Вывести карточки на страницу
+function renderCards(cardList, cardPopup) {
+  initialCards.forEach((item) =>
+    cardList.append(createCard(item, deleteCard, likeCard, cardPopup, showCard))
+  );
+}
+function insertCard(newCard, cardList, cardPopup) {
+  cardList.prepend(
+    createCard(newCard, deleteCard, likeCard, cardPopup, showCard)
+  );
+}
 renderCards(cardList, popupTypeImage);
