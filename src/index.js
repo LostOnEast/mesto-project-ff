@@ -1,5 +1,5 @@
 import { initialCards, createCard, deleteCard, likeCard } from "./components/cards.js";
-import { showPopup, closePopup, closePopupEsc } from "./components/modal.js";
+import { showPopup, closePopup, handleEscape } from "./components/modal.js";
 import "./components/modal.js";
 import "./index.css";
 
@@ -7,16 +7,7 @@ import "./index.css";
 const cardList = document.querySelector(".places__list");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
-const popupTypeEditCloseButton = document.querySelector(
-  ".popup_type_edit .popup__close"
-);
 const profileAddButton = document.querySelector(".profile__add-button");
-const popupAddCloseButton = document.querySelector(
-  ".popup_type_new-card .popup__close"
-);
-const popupImageCloseButton = document.querySelector(
-  ".popup_type_image .popup__close"
-);
 const popupTypeNewCard = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
 const profileTitle = document.querySelector(".profile__title");
@@ -31,14 +22,17 @@ const formInputPlaceName = document.querySelector(
   ".popup__input_type_card-name"
 );
 const formInputPlaceImgLink = document.querySelector(".popup__input_type_url");
+const cardImage = document.querySelector(".popup__image");
+const cardCaption = document.querySelector(".popup__caption");
+const popups = document.querySelectorAll('.popup')
 
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = formInputProfileName.value;
   profileDescription.textContent = formInputProfileDescription.value;
   closePopup(popupTypeEdit);
 }
-formEditProfile.addEventListener("submit", handleFormSubmit);
+formEditProfile.addEventListener("submit", handleProfileFormSubmit);
 
 profileEditButton.addEventListener("click", (evt) => {
   formEditProfile.elements.name.value = profileTitle.textContent;
@@ -51,44 +45,30 @@ function handleFormNewPlaceSubmit(evt) {
     name: formInputPlaceName.value,
     link: formInputPlaceImgLink.value,
   };
-  initialCards.unshift(addingCard);
+  
   insertCard(addingCard, cardList, popupTypeImage);
   closePopup(popupTypeNewCard);
   formNewPlace.reset();
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
-
 profileAddButton.addEventListener("click", (evt) => {
   showPopup(popupTypeNewCard);
 });
-// Закрытие по нажатию Esc
-document.addEventListener("keydown", (evt) => {
-  closePopupEsc(evt);
-});
+
 // Закрытие по клику вне popup
-popupTypeEdit.addEventListener("click", (evt) => {
-  closePopup(evt.target);
-});
-popupTypeNewCard.addEventListener("click", (evt) => {
-  closePopup(evt.target);
-});
-popupTypeImage.addEventListener("click", (evt) => {
-  closePopup(evt.target);
-});
-// Закрытие по клику popupClose
-popupTypeEditCloseButton.addEventListener("click", (evt) => {
-  closePopup(popupTypeEdit);
-});
-popupAddCloseButton.addEventListener("click", (evt) => {
-  closePopup(popupTypeNewCard);
-});
-popupImageCloseButton.addEventListener("click", (evt) => {
-  closePopup(popupTypeImage);
-});
+popups.forEach((popup) => {
+  popup.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_is-opened')) {
+        closePopup(popup)
+      }
+      if (evt.target.classList.contains('popup__close')) {
+        closePopup(popup)
+      }
+  })
+}) 
+
 //Функция отображения карточки
-function showCard(cardElement, popup) {
-  let cardImage = popup.querySelector(".popup__image");
-  let cardCaption = popup.querySelector(".popup__caption");
+function showCard(cardElement, popup) {  
   cardImage.src = cardElement.link;
   cardImage.alt = cardElement.name;
   cardCaption.textContent = cardElement.name;
