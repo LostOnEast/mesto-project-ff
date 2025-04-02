@@ -36,9 +36,9 @@ export function createCard(card, deleteFunction, likeFunction, popup, showFuncti
 
   cardImage.addEventListener("click", () => showFunction(card, popup));
   cardElement.querySelector(".card__title").textContent = card.name;
-  let deleteButton = cardElement.querySelector(".card__delete-button");
+  const deleteButton = cardElement.querySelector(".card__delete-button");
   deleteButton.addEventListener("click", () => deleteFunction(cardElement));
-  let likeButton = cardElement.querySelector(".card__like-button");
+  const likeButton = cardElement.querySelector(".card__like-button");
   likeButton.addEventListener("click", () => likeFunction(cardElement));
   return cardElement;
 }
