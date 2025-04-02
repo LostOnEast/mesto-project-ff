@@ -41,7 +41,7 @@ profileEditButton.addEventListener("click", (evt) => {
 });
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
-  let addingCard = {
+  const addingCard = {
     name: formInputPlaceName.value,
     link: formInputPlaceImgLink.value,
   };
