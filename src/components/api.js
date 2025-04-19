@@ -42,6 +42,26 @@ export const patchUserInfo = (newName,newAbout) => {
       console.log(err);
     });
 }
+export const patchUserAvatar = (avatarLink) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: avatarLink
+    })
+  },
+)
+    .then(res => {
+      if (res.ok) {        
+        return res.json();
+      }
+      // если ошибка, отклоняем промис
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch(err=>{
+      console.log(err);
+    });
+}
 
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
@@ -55,7 +75,6 @@ export const getInitialCards = () => {
       return Promise.reject(`Ошибка: ${res.status}`);
     })
     .then(res=>{
-      console.log(res);
       return res;
     })
     .catch(err=>{

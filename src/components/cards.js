@@ -76,7 +76,6 @@ export function likeCard(cardElement, apiLikeFunction, apiUnLikeFunction) {
   
 }
 function setLikeCounts(cardElement, likes) {
-  console.log(likes);
   const cardLikesCount = cardElement.querySelector(".card__likes-count");
   cardLikesCount.textContent=likes;
 }

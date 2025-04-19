@@ -13,6 +13,12 @@ const popupTypeEdit = document.querySelector(".popup_type_edit");
 const profileAddButton = document.querySelector(".profile__add-button");
 const popupTypeNewCard = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
+
+
+const popupTypeNewAvatar = document.querySelector(".popup_type_new-avatar");
+const avatarEditButton = document.querySelector(".avatar__edit-button");
+const formInputAvatarImgLink = document.querySelector(".popup__input_type_url-avatar");
+
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const formEditProfile = document.forms["edit-profile"];
@@ -25,6 +31,7 @@ const formNewPlace = document.forms["new-place"];
 const formInputPlaceName = document.querySelector(
   ".popup__input_type_card-name"
 );
+const formEditAvatar= document.forms["new-avatar"];
 const formInputPlaceImgLink = document.querySelector(".popup__input_type_url");
 const cardImage = document.querySelector(".popup__image");
 const cardCaption = document.querySelector(".popup__caption");
@@ -102,7 +109,17 @@ formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
 profileAddButton.addEventListener("click", (evt) => {
   showPopup(popupTypeNewCard);
 });
-
+formEditAvatar.addEventListener("submit", handleFormEditAvatarSubmit);
+avatarEditButton.addEventListener("click", (evt) => {
+  showPopup(popupTypeNewAvatar);
+});
+function handleFormEditAvatarSubmit(evt) {
+  evt.preventDefault();
+  api.patchUserAvatar(formInputAvatarImgLink.value).then(api.getUserInfo()).then(setUserInfo);  
+  closePopup(popupTypeNewAvatar);
+  formEditAvatar.reset();
+  validation.clearValidation(formEditAvatar, validationConfig);
+}
 // Закрытие по клику вне popup
 popups.forEach((popup) => {
   popup.addEventListener('mousedown', (evt) => {

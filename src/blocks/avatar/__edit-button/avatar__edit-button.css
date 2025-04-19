@@ -1,0 +1,19 @@
+.avatar__edit-button {  
+  height: 100%;
+  width: 100%; 
+  background: none; 
+  background-position: center;  
+  border-radius: 50%;
+  border: none;
+  grid-area: button;
+  align-self: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+.avatar__edit-button:hover {
+  
+  background: url('../../../images/edit-icon.svg') center no-repeat;
+  background-size:26px;
+  color: white;
+}
