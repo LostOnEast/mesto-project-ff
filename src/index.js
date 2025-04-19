@@ -1,5 +1,6 @@
 import { initialCards, createCard, deleteCard, likeCard } from "./components/cards.js";
 import { showPopup, closePopup, handleEscape } from "./components/modal.js";
+import * as validation from "./components/validation.js"
 import "./components/modal.js";
 import "./index.css";
 
@@ -25,6 +26,18 @@ const formInputPlaceImgLink = document.querySelector(".popup__input_type_url");
 const cardImage = document.querySelector(".popup__image");
 const cardCaption = document.querySelector(".popup__caption");
 const popups = document.querySelectorAll('.popup')
+const validationConfig={ 
+  
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+//Включение валидации
+validation.enableValidation(validationConfig); 
+
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -37,6 +50,7 @@ formEditProfile.addEventListener("submit", handleProfileFormSubmit);
 profileEditButton.addEventListener("click", (evt) => {
   formEditProfile.elements.name.value = profileTitle.textContent;
   formEditProfile.elements.description.value = profileDescription.textContent;
+  validation.clearValidation(formEditProfile,validationConfig);
   showPopup(popupTypeEdit);
 });
 function handleFormNewPlaceSubmit(evt) {
@@ -49,6 +63,7 @@ function handleFormNewPlaceSubmit(evt) {
   insertCard(addingCard, cardList, popupTypeImage);
   closePopup(popupTypeNewCard);
   formNewPlace.reset();
+  validation.clearValidation(formNewPlace, validationConfig);
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
 profileAddButton.addEventListener("click", (evt) => {
