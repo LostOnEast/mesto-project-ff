@@ -44,7 +44,7 @@ Promise.all(promises)
   .then(([user, cards]) => {
    
     setUserInfo(user);
-    renderCards(cards, popupTypeImage);
+    renderCards(cards, popupTypeImage, user._id);
     
   })
   .catch((error) => {
@@ -59,16 +59,23 @@ const setUserInfo=(userInfo)=>{
     dom.profileTitle.textContent=userInfo.name;
     dom.profileDescription.textContent=userInfo.about;  
 }
-const renderCards=(cards, cardPopup)=>{
-  console.log(cards);
-  cards.forEach((item) =>
-    cardList.append(createCard(item, deleteCard, likeCard, cardPopup, showCard))
+const renderCards=(cards, cardPopup, ownerId)=>{
+  let isOwner=false;
+  let isLiked=false;
+  
+  cards.forEach((item) =>{
+    if(ownerId===item.owner._id) isOwner=true;
+    else isOwner=false;
+    isLiked = item.likes.some(like => like._id === ownerId);
+    cardList.append(createCard(item, deleteCard, likeCard, cardPopup, showCard, isOwner, api.deleteCard, api.likeCard, api.unlikeCard, isLiked))
+  }    
   );
 }
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = formInputProfileName.value;
   profileDescription.textContent = formInputProfileDescription.value;
+  api.patchUserInfo(formInputProfileName.value,formInputProfileDescription.value)
   closePopup(popupTypeEdit);
 }
 formEditProfile.addEventListener("submit", handleProfileFormSubmit);
@@ -116,8 +123,9 @@ function showCard(cardElement, popup) {
   showPopup(popup);
 }
 function insertCard(newCard, cardList, cardPopup) {
+  let refreshedCard=api.postCard(newCard.name, newCard.link);
   cardList.prepend(
-    createCard(newCard, deleteCard, likeCard, cardPopup, showCard)
+    createCard(refreshedCard, deleteCard, likeCard, cardPopup, showCard, true, false)
   );
 }
 
