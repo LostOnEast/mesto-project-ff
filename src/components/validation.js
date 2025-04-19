@@ -25,7 +25,6 @@ const setEventListeners = (formElement, inputSelector,inputErrorClass, errorClas
   toggleButtonState(inputList, buttonElement,inactiveButtonClass);
   inputList.forEach((inputElement) => {
     // каждому полю добавим обработчик события input
-    console.log(formElement)
     inputElement.addEventListener('input', 
       () => {
         isValid(formElement, inputElement,inputErrorClass, errorClass);
@@ -85,12 +84,10 @@ const hasInvalidInput = (inputList) => {
 }; 
 const toggleButtonState = (inputList, buttonElement,inactiveButtonClass) => {
   if (hasInvalidInput(inputList)) {
-    console.log('сделай кнопку неактивной');
-    console.log(buttonElement);
     buttonElement.disabled = true;
     buttonElement.classList.add(inactiveButtonClass);
   } else {
-    console.log('сделай кнопку активной');
+    
     buttonElement.disabled = false;
     buttonElement.classList.remove(inactiveButtonClass);
   }

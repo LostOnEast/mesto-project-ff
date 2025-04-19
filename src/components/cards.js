@@ -1,4 +1,5 @@
 
+import * as api from "./api.js"
 //Темплейт карточки initialCards
 const cardTemplate = document.querySelector("#card-template").content;
 export const initialCards = [

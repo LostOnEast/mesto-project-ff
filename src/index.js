@@ -3,6 +3,8 @@ import { showPopup, closePopup, handleEscape } from "./components/modal.js";
 import * as validation from "./components/validation.js"
 import "./components/modal.js";
 import "./index.css";
+import * as api from "./components/api.js"
+import * as dom from "./components/dom.js"
 
 //DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -15,6 +17,7 @@ const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const formEditProfile = document.forms["edit-profile"];
 const formInputProfileName = document.querySelector(".popup__input_type_name");
+
 const formInputProfileDescription = document.querySelector(
   ".popup__input_type_description"
 );
@@ -35,10 +38,33 @@ const validationConfig={
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
 };
+//Зависимые промисы
+const promises = [api.getUserInfo(), api.getInitialCards()];
+Promise.all(promises)
+  .then(([user, cards]) => {
+   
+    setUserInfo(user);
+    renderCards(cards, popupTypeImage);
+    
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 //Включение валидации
 validation.enableValidation(validationConfig); 
+// setUserInfo();
 
-
+const setUserInfo=(userInfo)=>{
+    dom.profileImageElement.style.backgroundImage = `url("${userInfo.avatar}")`;
+    dom.profileTitle.textContent=userInfo.name;
+    dom.profileDescription.textContent=userInfo.about;  
+}
+const renderCards=(cards, cardPopup)=>{
+  console.log(cards);
+  cards.forEach((item) =>
+    cardList.append(createCard(item, deleteCard, likeCard, cardPopup, showCard))
+  );
+}
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = formInputProfileName.value;
@@ -89,15 +115,9 @@ function showCard(cardElement, popup) {
   cardCaption.textContent = cardElement.name;
   showPopup(popup);
 }
-//Вывести карточки на страницу
-function renderCards(cardList, cardPopup) {
-  initialCards.forEach((item) =>
-    cardList.append(createCard(item, deleteCard, likeCard, cardPopup, showCard))
-  );
-}
 function insertCard(newCard, cardList, cardPopup) {
   cardList.prepend(
     createCard(newCard, deleteCard, likeCard, cardPopup, showCard)
   );
 }
-renderCards(cardList, popupTypeImage);
+
