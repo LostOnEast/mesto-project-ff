@@ -4,10 +4,15 @@
   "description": "https://github.com/LostOnEast/mesto-project-ff",
   "main": "index.js",
   "scripts": {
+    "format": "prettier --write './**/*.{html,css,js}'",
+    "lint": "stylelint **/*.css",
+    "lintfix" : "stylelint **/*.css --fix",
+    "checkAll": "npm run check && npm run lint",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "dev": "webpack serve",
+    "fixAllAndDeploy": "npm run format && npm run lintfix && npm run deploy"
   },
   "author": "",
   "license": "ISC",
