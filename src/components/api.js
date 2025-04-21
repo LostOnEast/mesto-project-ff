@@ -22,6 +22,7 @@ export const getUserInfo = () => {
     });
 }
 export const patchUserInfo = (newName,newAbout) => {
+  
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,

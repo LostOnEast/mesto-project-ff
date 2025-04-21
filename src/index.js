@@ -82,8 +82,12 @@ function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = formInputProfileName.value;
   profileDescription.textContent = formInputProfileDescription.value;
-  api.patchUserInfo(formInputProfileName.value,formInputProfileDescription.value)
-  closePopup(popupTypeEdit);
+  renderLoading(true, evt.submitter);
+  api.patchUserInfo(formInputProfileName.value,formInputProfileDescription.value).finally(()=>{
+    renderLoading(false, evt.submitter);
+    closePopup(popupTypeEdit);
+  });
+  
 }
 formEditProfile.addEventListener("submit", handleProfileFormSubmit);
 
@@ -115,8 +119,13 @@ avatarEditButton.addEventListener("click", (evt) => {
 });
 function handleFormEditAvatarSubmit(evt) {
   evt.preventDefault();
-  api.patchUserAvatar(formInputAvatarImgLink.value).then(api.getUserInfo()).then(setUserInfo);  
-  closePopup(popupTypeNewAvatar);
+  renderLoading(true, evt.submitter);
+  api.patchUserAvatar(formInputAvatarImgLink.value).then(api.getUserInfo()).then(setUserInfo).finally(()=>{
+    renderLoading(false, evt.submitter);
+    closePopup(popupTypeNewAvatar);
+  });
+  // api.patchUserAvatar(formInputAvatarImgLink.value).then(api.getUserInfo()).then(setUserInfo);  
+  // closePopup(popupTypeNewAvatar);
   formEditAvatar.reset();
   validation.clearValidation(formEditAvatar, validationConfig);
 }
@@ -140,9 +149,22 @@ function showCard(cardElement, popup) {
   showPopup(popup);
 }
 function insertCard(newCard, cardList, cardPopup) {
+  //TODO Индикация загрузки данных на сервер
   let refreshedCard=api.postCard(newCard.name, newCard.link);
   cardList.prepend(
     createCard(refreshedCard, deleteCard, likeCard, cardPopup, showCard, true, false)
   );
+}
+function renderLoading(isLoading, loadingElement) {
+  if(isLoading) {
+    loadingElement.textContent="Сохранение..."
+    console.log("Сохранение...");
+    
+
+  }
+  else {
+    loadingElement.textContent="Сохранить"
+    console.log("Сохранить");
+  }
 }
 
