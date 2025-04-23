@@ -1,5 +1,4 @@
 import {
-  initialCards,
   createCard,
   deleteCard,
   likeCard,
@@ -94,9 +93,13 @@ function handleProfileFormSubmit(evt) {
       formInputProfileName.value,
       formInputProfileDescription.value
     )
+    .then(closePopup(popupTypeEdit))
     .finally(() => {
       renderLoading(false, evt.submitter);
-      closePopup(popupTypeEdit);
+      
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 formEditProfile.addEventListener("submit", handleProfileFormSubmit);
@@ -115,7 +118,6 @@ function handleFormNewPlaceSubmit(evt) {
   };
 
   insertCard(addingCard, cardList, popupTypeImage);
-  closePopup(popupTypeNewCard);
   formNewPlace.reset();
   validation.clearValidation(formNewPlace, validationConfig);
 }
@@ -134,9 +136,10 @@ function handleFormEditAvatarSubmit(evt) {
     .patchUserAvatar(formInputAvatarImgLink.value)
     .then(api.getUserInfo())
     .then(setUserInfo)
-    .finally(() => {
-      renderLoading(false, evt.submitter);
-      closePopup(popupTypeNewAvatar);
+    .then(closePopup(popupTypeNewAvatar))
+    .finally(renderLoading(false, evt.submitter))
+    .catch((err) => {
+      console.log(err);
     });
   formEditAvatar.reset();
   validation.clearValidation(formEditAvatar, validationConfig);
@@ -160,18 +163,26 @@ function showCard(cardElement, popup) {
   showPopup(popup);
 }
 function insertCard(newCard, cardList, cardPopup) {
-  let refreshedCard = api.postCard(newCard.name, newCard.link);
-  cardList.prepend(
-    createCard(
-      refreshedCard,
-      deleteCard,
-      likeCard,
-      cardPopup,
-      showCard,
-      true,
-      false
-    )
-  );
+  api.postCard(newCard.name, newCard.link)
+  .then(card=>{
+    cardList.prepend(
+      createCard(
+        card,
+        deleteCard,
+        likeCard,
+        cardPopup,
+        showCard,
+        true,
+        api.deleteCard,
+        api.likeCard,
+        api.unlikeCard,
+        false
+      )
+  )})
+  .then(closePopup(popupTypeNewCard))
+  .catch((err) => {
+    console.log(err);
+  });;
 }
 function renderLoading(isLoading, loadingElement) {
   if (isLoading) {

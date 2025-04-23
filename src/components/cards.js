@@ -63,26 +63,29 @@ export function createCard(
   likeButton.addEventListener("click", () =>
     likeFunction(cardElement, apiLikeFunction, apiUnLikeFunction)
   );
-  setLikeCounts(cardElement, card.likes.length);
+  let likesCount=0;
+  if(card.likes != null) likesCount=card.likes.length
+  setLikeCounts(cardElement, likesCount);
   return cardElement;
 }
 //Функция удаления карточки
 export function deleteCard(cardElement, apiDeleteFunction) {
-  cardElement.remove();
-  apiDeleteFunction(cardElement.id);
+  apiDeleteFunction(cardElement.id).then(t=>{cardElement.remove();});
 }
 //Функция лайка карточки
 export function likeCard(cardElement, apiLikeFunction, apiUnLikeFunction) {
   const likeButton = cardElement.querySelector(".card__like-button");
   if (likeButton.classList.contains("card__like-button_is-active")) {
-    likeButton.classList.remove("card__like-button_is-active");
+    
     apiUnLikeFunction(cardElement.id).then((t) => {
       setLikeCounts(cardElement, t.likes.length);
+      likeButton.classList.remove("card__like-button_is-active");
     });
   } else {
-    likeButton.classList.add("card__like-button_is-active");
+    
     apiLikeFunction(cardElement.id).then((t) => {
       setLikeCounts(cardElement, t.likes.length);
+      likeButton.classList.add("card__like-button_is-active");
     });
   }
 }

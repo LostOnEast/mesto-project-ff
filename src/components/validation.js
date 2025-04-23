@@ -25,6 +25,7 @@ const setEventListeners = (
   const buttonElement = formElement.querySelector(submitButtonSelector);
   toggleButtonState(inputList, buttonElement, inactiveButtonClass);
   inputList.forEach((inputElement) => {
+    isValid(formElement, inputElement, inputErrorClass, errorClass);
     inputElement.addEventListener("input", () => {
       isValid(formElement, inputElement, inputErrorClass, errorClass);
       toggleButtonState(inputList, buttonElement, inactiveButtonClass);
@@ -32,10 +33,12 @@ const setEventListeners = (
   });
 };
 export function clearValidation(formElement, validationConfig) {
+  
   const inputList = Array.from(
     formElement.querySelectorAll(validationConfig.inputSelector)
   );
   inputList.forEach((inputElement) => {
+    inputElement.setCustomValidity('');
     inputElement.classList.remove(validationConfig.inputErrorClass);
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     errorElement.classList.remove(validationConfig.errorClass);
