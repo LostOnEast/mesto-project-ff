@@ -1,32 +1,30 @@
 import * as api from "./api.js";
 //Темплейт карточки initialCards
 const cardTemplate = document.querySelector("#card-template").content;
-export const initialCards = [
-  {
-    name: "Архыз",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-  },
-  {
-    name: "Челябинская область",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-  },
-  {
-    name: "Иваново",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-  },
-  {
-    name: "Камчатка",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-  },
-  {
-    name: "Холмогорский район",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-  },
-  {
-    name: "Байкал",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-  },
-];
+export const renderCards = (cardList,cards, cardPopup, showCard, ownerId) => {
+  let isOwner = false;
+  let isLiked = false;
+
+  cards.forEach((item) => {
+    if (ownerId === item.owner._id) isOwner = true;
+    else isOwner = false;
+    isLiked = item.likes.some((like) => like._id === ownerId);
+    cardList.append(
+      createCard(
+        item,
+        deleteCard,
+        likeCard,
+        cardPopup,
+        showCard,
+        isOwner,
+        api.deleteCard,
+        api.likeCard,
+        api.unlikeCard,
+        isLiked
+      )
+    );
+  });
+};
 //Функция создания карточки
 export function createCard(
   card,
@@ -78,14 +76,21 @@ export function likeCard(cardElement, apiLikeFunction, apiUnLikeFunction) {
   if (likeButton.classList.contains("card__like-button_is-active")) {
     
     apiUnLikeFunction(cardElement.id).then((t) => {
-      setLikeCounts(cardElement, t.likes.length);
-      likeButton.classList.remove("card__like-button_is-active");
+      setLikeCounts(cardElement, t.likes.length).then(()=>{
+        likeButton.classList.remove("card__like-button_is-active");
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+      
     });
   } else {
     
     apiLikeFunction(cardElement.id).then((t) => {
-      setLikeCounts(cardElement, t.likes.length);
-      likeButton.classList.add("card__like-button_is-active");
+      setLikeCounts(cardElement, t.likes.length).then(()=>{
+        likeButton.classList.add("card__like-button_is-active");
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
     });
   }
 }

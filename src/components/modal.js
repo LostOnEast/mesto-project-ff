@@ -3,7 +3,6 @@ export function showPopup(element) {
   document.addEventListener("keydown", handleEscape);
 }
 export function closePopup(element) {
-  element.classList.add("popup_is-opened");
   element.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", handleEscape);
 }

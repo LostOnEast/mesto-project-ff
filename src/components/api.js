@@ -6,20 +6,15 @@ const config = {
     "Content-Type": "application/json",
   },
 };
+
+function getResponseData(res) {
+  if (res.ok) return res.json();
+  return res.json().then(err => Promise.reject(err));
+}
 export const getUserInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    headers: config.headers
+  }).then(getResponseData);
 };
 export const patchUserInfo = (newName, newAbout) => {
   return fetch(`${config.baseUrl}/users/me`, {
@@ -29,17 +24,7 @@ export const patchUserInfo = (newName, newAbout) => {
       name: newName,
       about: newAbout,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };
 export const patchUserAvatar = (avatarLink) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
@@ -48,35 +33,14 @@ export const patchUserAvatar = (avatarLink) => {
     body: JSON.stringify({
       avatar: avatarLink,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };
 
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  .then(getResponseData);
 };
 export const postCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
@@ -86,63 +50,23 @@ export const postCard = (name, link) => {
       name,
       link,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };
 export const deleteCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };
 export const likeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };
 export const unlikeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then(getResponseData);
 };

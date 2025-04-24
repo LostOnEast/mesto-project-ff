@@ -32,6 +32,12 @@ const setEventListeners = (
     });
   });
 };
+function clearElements(inputElement,formElement,inputErrorClass,errorClass){ 
+     inputElement.classList.remove(inputErrorClass);    
+     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+     errorElement.classList.remove(errorClass);
+     errorElement.textContent = "";
+}
 export function clearValidation(formElement, validationConfig) {
   
   const inputList = Array.from(
@@ -39,10 +45,13 @@ export function clearValidation(formElement, validationConfig) {
   );
   inputList.forEach((inputElement) => {
     inputElement.setCustomValidity('');
-    inputElement.classList.remove(validationConfig.inputErrorClass);
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    errorElement.classList.remove(validationConfig.errorClass);
-    errorElement.textContent = "";
+    clearElements(inputElement,formElement,validationConfig.inputErrorClass,validationConfig.errorClass);
+
+
+    // inputElement.classList.remove(validationConfig.inputErrorClass);
+    // const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    // errorElement.classList.remove(validationConfig.errorClass);
+    // errorElement.textContent = "";
   });
   const buttonElement = formElement.querySelector(
     validationConfig.submitButtonSelector
@@ -81,6 +90,7 @@ const showInputError = (
   inputErrorClass,
   errorClass
 ) => {
+  
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(inputErrorClass);
   errorElement.textContent = errorMessage;
@@ -93,10 +103,11 @@ const hideInputError = (
   inputErrorClass,
   errorClass
 ) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove(inputErrorClass);
-  errorElement.classList.remove(errorClass);
-  errorElement.textContent = "";
+  clearElements(inputElement,formElement,inputErrorClass,errorClass);
+  // const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  // inputElement.classList.remove(inputErrorClass);
+  // errorElement.classList.remove(errorClass);
+  // errorElement.textContent = "";
 };
 const hasInvalidInput = (inputList) => {
   return inputList.some((inputElement) => {
