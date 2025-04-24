@@ -76,22 +76,22 @@ export function likeCard(cardElement, apiLikeFunction, apiUnLikeFunction) {
   if (likeButton.classList.contains("card__like-button_is-active")) {
     
     apiUnLikeFunction(cardElement.id).then((t) => {
-      setLikeCounts(cardElement, t.likes.length).then(()=>{
-        likeButton.classList.remove("card__like-button_is-active");
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
-      
+      setLikeCounts(cardElement, t.likes.length);
+      likeButton.classList.remove("card__like-button_is-active");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
   } else {
     
     apiLikeFunction(cardElement.id).then((t) => {
-      setLikeCounts(cardElement, t.likes.length).then(()=>{
-        likeButton.classList.add("card__like-button_is-active");
-      }).catch((error) => {
+      setLikeCounts(cardElement, t.likes.length);
+      likeButton.classList.add("card__like-button_is-active");
+    })
+      .catch((error) => {
         console.error("Error:", error);
       });
-    });
+    
   }
 }
 function setLikeCounts(cardElement, likes) {

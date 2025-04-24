@@ -61,7 +61,6 @@ Promise.all(promises)
 //Включение валидации
 validation.enableValidation(validationConfig);
 const setUserInfo = (userInfo) => {
-  console.log(userInfo);
   dom.profileImageElement.style.backgroundImage = `url("${userInfo.avatar}")`;
   dom.profileTitle.textContent = userInfo.name;
   dom.profileDescription.textContent = userInfo.about;
@@ -80,14 +79,13 @@ function handleProfileFormSubmit(evt) {
       closePopup(popupTypeEdit);
       profileTitle.textContent = profile.name;
       profileDescription.textContent = profile.about;
-      console.log(profile);
     })
 
     .finally(() => {
       renderLoading(false, evt.submitter);
     })
     .catch((err) => {
-      console.log(err);
+      console.error("Error:", error);
     });
 }
 formEditProfile.addEventListener("submit", handleProfileFormSubmit);
@@ -128,7 +126,7 @@ function handleFormEditAvatarSubmit(evt) {
     .then(closePopup(popupTypeNewAvatar))
     .finally(renderLoading(false, evt.submitter))
     .catch((err) => {
-      console.log(err);
+      console.error("Error:", error);
     });
   validation.clearValidation(formEditAvatar, validationConfig);
 }
@@ -171,7 +169,7 @@ function insertCard(newCard, cardList, cardPopup) {
     })
     .then(closePopup(popupTypeNewCard))
     .catch((err) => {
-      console.log(err);
+      console.error("Error:", error);
     });
 }
 function renderLoading(isLoading, loadingElement) {
