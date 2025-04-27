@@ -32,21 +32,24 @@ const setEventListeners = (
     });
   });
 };
-function clearElements(inputElement,formElement,inputErrorClass,errorClass){ 
-     inputElement.classList.remove(inputErrorClass);    
-     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-     errorElement.classList.remove(errorClass);
-     errorElement.textContent = "";
+function clearElements(inputElement, formElement, inputErrorClass, errorClass) {
+  inputElement.classList.remove(inputErrorClass);
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  errorElement.classList.remove(errorClass);
+  errorElement.textContent = "";
 }
 export function clearValidation(formElement, validationConfig) {
-  
   const inputList = Array.from(
     formElement.querySelectorAll(validationConfig.inputSelector)
   );
   inputList.forEach((inputElement) => {
-    inputElement.setCustomValidity('');
-    clearElements(inputElement,formElement,validationConfig.inputErrorClass,validationConfig.errorClass);
-
+    inputElement.setCustomValidity("");
+    clearElements(
+      inputElement,
+      formElement,
+      validationConfig.inputErrorClass,
+      validationConfig.errorClass
+    );
 
     // inputElement.classList.remove(validationConfig.inputErrorClass);
     // const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -80,7 +83,7 @@ const isValid = (formElement, inputElement, inputErrorClass, errorClass) => {
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage);
   } else {
-    hideInputError(formElement, inputElement);
+    clearElements(inputElement, formElement, inputErrorClass, errorClass);
   }
 };
 const showInputError = (
@@ -90,25 +93,12 @@ const showInputError = (
   inputErrorClass,
   errorClass
 ) => {
-  
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(inputErrorClass);
   errorElement.textContent = errorMessage;
   errorElement.classList.add(errorClass);
 };
 
-const hideInputError = (
-  formElement,
-  inputElement,
-  inputErrorClass,
-  errorClass
-) => {
-  clearElements(inputElement,formElement,inputErrorClass,errorClass);
-  // const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  // inputElement.classList.remove(inputErrorClass);
-  // errorElement.classList.remove(errorClass);
-  // errorElement.textContent = "";
-};
 const hasInvalidInput = (inputList) => {
   return inputList.some((inputElement) => {
     return !inputElement.validity.valid;

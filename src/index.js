@@ -1,9 +1,4 @@
-import {
-  renderCards,
-  createCard,
-  deleteCard,
-  likeCard,
-} from "./components/cards.js";
+import { createCard, deleteCard, likeCard } from "./components/cards.js";
 import { showPopup, closePopup, handleEscape } from "./components/modal.js";
 import * as validation from "./components/validation.js";
 import "./components/modal.js";
@@ -107,15 +102,14 @@ function handleFormNewPlaceSubmit(evt) {
           deleteCard,
           likeCard,
           showCard,
-          true,
+          card.owner._id,
           api.deleteCard,
           api.likeCard,
-          api.unlikeCard,
-          false
+          api.unlikeCard
         )
       );
+      closePopup(popupTypeNewCard);
     })
-    .then(closePopup(popupTypeNewCard))
     .catch((err) => {
       console.error("Error:", err);
     });
@@ -123,6 +117,7 @@ function handleFormNewPlaceSubmit(evt) {
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
 profileAddButton.addEventListener("click", (evt) => {
+  validation.clearValidation(popupTypeNewCard, validationConfig);
   showPopup(popupTypeNewCard);
 });
 formEditAvatar.addEventListener("submit", handleFormEditAvatarSubmit);
@@ -137,11 +132,11 @@ function handleFormEditAvatarSubmit(evt) {
     .then((userInfo) => {
       setUserInfo(userInfo);
       formEditAvatar.reset();
-      closePopup(popupTypeNewAvatar)
+      closePopup(popupTypeNewAvatar);
     })
     .finally(renderLoading(false, evt.submitter))
     .catch((err) => {
-      console.error("Error:", error);
+      console.error("Error:", err);
     });
 }
 // Закрытие по клику вне popup
@@ -156,13 +151,28 @@ popups.forEach((popup) => {
   });
 });
 //Функция отображения карточки
-const showCard=(cardElement) => {
+const showCard = (cardElement) => {
   cardImage.src = cardElement.link;
   cardImage.alt = cardElement.name;
   cardCaption.textContent = cardElement.name;
   showPopup(popupTypeImage);
-}
-
+};
+const renderCards = (cardList, cards, showCard, ownerId) => {
+  cards.forEach((item) => {
+    cardList.append(
+      createCard(
+        item,
+        deleteCard,
+        likeCard,
+        showCard,
+        ownerId,
+        api.deleteCard,
+        api.likeCard,
+        api.unlikeCard
+      )
+    );
+  });
+};
 function renderLoading(isLoading, loadingElement) {
   if (isLoading) {
     loadingElement.textContent = "Сохранение...";
