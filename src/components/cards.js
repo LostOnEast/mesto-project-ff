@@ -1,7 +1,8 @@
 import * as api from "./api.js";
+
 //Темплейт карточки initialCards
 const cardTemplate = document.querySelector("#card-template").content;
-export const renderCards = (cardList,cards, cardPopup, showCard, ownerId) => {
+export const renderCards = (cardList,cards, showCard, ownerId) => {
   let isOwner = false;
   let isLiked = false;
 
@@ -14,7 +15,6 @@ export const renderCards = (cardList,cards, cardPopup, showCard, ownerId) => {
         item,
         deleteCard,
         likeCard,
-        cardPopup,
         showCard,
         isOwner,
         api.deleteCard,
@@ -30,7 +30,6 @@ export function createCard(
   card,
   deleteFunction,
   likeFunction,
-  popup,
   showFunction,
   isOwner,
   apiDeleteFunction,
@@ -43,7 +42,7 @@ export function createCard(
   cardImage.src = card.link;
   cardImage.alt = card.name;
 
-  cardImage.addEventListener("click", () => showFunction(card, popup));
+  cardImage.addEventListener("click", () => showFunction(card));
   cardElement.querySelector(".card__title").textContent = card.name;
   cardElement.id = card._id;
   const deleteButton = cardElement.querySelector(".card__delete-button");

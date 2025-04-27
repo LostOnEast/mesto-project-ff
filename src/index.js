@@ -53,7 +53,7 @@ const promises = [api.getUserInfo(), api.getInitialCards()];
 Promise.all(promises)
   .then(([user, cards]) => {
     setUserInfo(user);
-    renderCards(cardList, cards, popupTypeImage, showCard, user._id);
+    renderCards(cardList, cards, showCard, user._id);
   })
   .catch((error) => {
     console.error("Error:", error);
@@ -106,7 +106,6 @@ function handleFormNewPlaceSubmit(evt) {
           card,
           deleteCard,
           likeCard,
-          popupTypeImage,
           showCard,
           true,
           api.deleteCard,
@@ -157,11 +156,11 @@ popups.forEach((popup) => {
   });
 });
 //Функция отображения карточки
-function showCard(cardElement, popup) {
+const showCard=(cardElement) => {
   cardImage.src = cardElement.link;
   cardImage.alt = cardElement.name;
   cardCaption.textContent = cardElement.name;
-  showPopup(popup);
+  showPopup(popupTypeImage);
 }
 
 function renderLoading(isLoading, loadingElement) {
