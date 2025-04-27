@@ -98,12 +98,28 @@ profileEditButton.addEventListener("click", (evt) => {
 });
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
-  const addingCard = {
-    name: formInputPlaceName.value,
-    link: formInputPlaceImgLink.value,
-  };
-
-  insertCard(addingCard, cardList, popupTypeImage);
+  api
+    .postCard(formInputPlaceName.value, formInputPlaceImgLink.value)
+    .then((card) => {
+      cardList.prepend(
+        createCard(
+          card,
+          deleteCard,
+          likeCard,
+          popupTypeImage,
+          showCard,
+          true,
+          api.deleteCard,
+          api.likeCard,
+          api.unlikeCard,
+          false
+        )
+      );
+    })
+    .then(closePopup(popupTypeNewCard))
+    .catch((err) => {
+      console.error("Error:", err);
+    });
   formNewPlace.reset();
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
@@ -119,16 +135,15 @@ function handleFormEditAvatarSubmit(evt) {
   renderLoading(true, evt.submitter);
   api
     .patchUserAvatar(formInputAvatarImgLink.value)
-    .then((t) => {
-      setUserInfo(t);
+    .then((userInfo) => {
+      setUserInfo(userInfo);
       formEditAvatar.reset();
+      closePopup(popupTypeNewAvatar)
     })
-    .then(closePopup(popupTypeNewAvatar))
     .finally(renderLoading(false, evt.submitter))
     .catch((err) => {
       console.error("Error:", error);
     });
-  validation.clearValidation(formEditAvatar, validationConfig);
 }
 // Закрытие по клику вне popup
 popups.forEach((popup) => {
@@ -148,30 +163,7 @@ function showCard(cardElement, popup) {
   cardCaption.textContent = cardElement.name;
   showPopup(popup);
 }
-function insertCard(newCard, cardList, cardPopup) {
-  api
-    .postCard(newCard.name, newCard.link)
-    .then((card) => {
-      cardList.prepend(
-        createCard(
-          card,
-          deleteCard,
-          likeCard,
-          cardPopup,
-          showCard,
-          true,
-          api.deleteCard,
-          api.likeCard,
-          api.unlikeCard,
-          false
-        )
-      );
-    })
-    .then(closePopup(popupTypeNewCard))
-    .catch((err) => {
-      console.error("Error:", error);
-    });
-}
+
 function renderLoading(isLoading, loadingElement) {
   if (isLoading) {
     loadingElement.textContent = "Сохранение...";
