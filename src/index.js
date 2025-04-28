@@ -75,7 +75,6 @@ function handleProfileFormSubmit(evt) {
       profileTitle.textContent = profile.name;
       profileDescription.textContent = profile.about;
     })
-
     .finally(() => {
       renderLoading(false, evt.submitter);
     })
@@ -93,6 +92,7 @@ profileEditButton.addEventListener("click", (evt) => {
 });
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
+  renderLoading(true, evt.submitter);
   api
     .postCard(formInputPlaceName.value, formInputPlaceImgLink.value)
     .then((card) => {
@@ -111,6 +111,9 @@ function handleFormNewPlaceSubmit(evt) {
       closePopup(popupTypeNewCard);
       formNewPlace.reset();
     })
+    .finally(() => {
+      renderLoading(false, evt.submitter);
+    })
     .catch((err) => {
       console.error("Error:", err);
     });
@@ -123,6 +126,7 @@ profileAddButton.addEventListener("click", (evt) => {
 });
 formEditAvatar.addEventListener("submit", handleFormEditAvatarSubmit);
 avatarEditButton.addEventListener("click", (evt) => {
+  validation.clearValidation(popupTypeNewAvatar, validationConfig);
   showPopup(popupTypeNewAvatar);
 });
 function handleFormEditAvatarSubmit(evt) {
@@ -131,11 +135,13 @@ function handleFormEditAvatarSubmit(evt) {
   api
     .patchUserAvatar(formInputAvatarImgLink.value)
     .then((userInfo) => {
-      setUserInfo(userInfo);
-      formEditAvatar.reset();
+      setUserInfo(userInfo);      
       closePopup(popupTypeNewAvatar);
+      formEditAvatar.reset();
     })
-    .finally(renderLoading(false, evt.submitter))
+    .finally(() => {
+      renderLoading(false, evt.submitter);
+    })
     .catch((err) => {
       console.error("Error:", err);
     });

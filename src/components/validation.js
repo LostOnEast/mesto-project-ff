@@ -3,6 +3,7 @@ export function enableValidation(validationConfig) {
     document.querySelectorAll(validationConfig.formSelector)
   );
   formList.forEach((formElement) => {
+      
     setEventListeners(
       formElement,
       validationConfig.inputSelector,
@@ -21,6 +22,7 @@ const setEventListeners = (
   submitButtonSelector,
   inactiveButtonClass
 ) => {
+  
   const inputList = Array.from(formElement.querySelectorAll(inputSelector));
   const buttonElement = formElement.querySelector(submitButtonSelector);
   toggleButtonState(inputList, buttonElement, inactiveButtonClass);
@@ -49,11 +51,6 @@ export function clearValidation(formElement, validationConfig) {
       validationConfig.inputErrorClass,
       validationConfig.errorClass
     );
-
-    // inputElement.classList.remove(validationConfig.inputErrorClass);
-    // const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    // errorElement.classList.remove(validationConfig.errorClass);
-    // errorElement.textContent = "";
   });
   const buttonElement = formElement.querySelector(
     validationConfig.submitButtonSelector
@@ -64,9 +61,9 @@ export function clearValidation(formElement, validationConfig) {
     validationConfig.inactiveButtonClass
   );
 }
-
-const isValid = (formElement, inputElement, inputErrorClass, errorClass) => {
+function isValid (formElement, inputElement, inputErrorClass, errorClass)  {
   if (inputElement.validity.patternMismatch) {
+    
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
     showInputError(
       formElement,
@@ -78,9 +75,8 @@ const isValid = (formElement, inputElement, inputErrorClass, errorClass) => {
   } else {
     inputElement.setCustomValidity("");
   }
-
   if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    showInputError(formElement, inputElement, inputElement.validationMessage, inputErrorClass, errorClass);
   } else {
     clearElements(inputElement, formElement, inputErrorClass, errorClass);
   }
@@ -104,6 +100,7 @@ const hasInvalidInput = (inputList) => {
   });
 };
 const toggleButtonState = (inputList, buttonElement, inactiveButtonClass) => {
+  console.log('toggleButtonState');
   if (hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
     buttonElement.classList.add(inactiveButtonClass);
