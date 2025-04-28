@@ -68,8 +68,8 @@ export function likeCard(cardElement, apiLikeFunction, apiUnLikeFunction) {
       });
   } else {
     apiLikeFunction(cardElement.id)
-      .then((t) => {
-        setLikeCounts(cardElement, t.likes.length);
+      .then((card) => {
+        setLikeCounts(cardElement, card.likes.length);
         likeButton.classList.add("card__like-button_is-active");
       })
       .catch((error) => {

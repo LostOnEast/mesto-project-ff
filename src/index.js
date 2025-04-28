@@ -109,11 +109,12 @@ function handleFormNewPlaceSubmit(evt) {
         )
       );
       closePopup(popupTypeNewCard);
+      formNewPlace.reset();
     })
     .catch((err) => {
       console.error("Error:", err);
     });
-  formNewPlace.reset();
+  
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
 profileAddButton.addEventListener("click", (evt) => {
