@@ -9,11 +9,11 @@ const config = {
 
 function getResponseData(res) {
   if (res.ok) return res.json();
-  return res.json().then(err => Promise.reject(err));
+  return res.json().then((err) => Promise.reject(err));
 }
 export const getUserInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers
+    headers: config.headers,
   }).then(getResponseData);
 };
 export const patchUserInfo = (newName, newAbout) => {
@@ -39,8 +39,7 @@ export const patchUserAvatar = (avatarLink) => {
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  })
-  .then(getResponseData);
+  }).then(getResponseData);
 };
 export const postCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
