@@ -4,7 +4,6 @@ import * as validation from "./components/validation.js";
 import "./components/modal.js";
 import "./index.css";
 import * as api from "./components/api.js";
-import * as dom from "./components/dom.js";
 
 //DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -20,6 +19,7 @@ const formInputAvatarImgLink = document.querySelector(
 );
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileImageElement = document.querySelector(".profile__image");
 const formEditProfile = document.forms["edit-profile"];
 const formInputProfileName = document.querySelector(".popup__input_type_name");
 const formInputProfileDescription = document.querySelector(
@@ -34,6 +34,7 @@ const formInputPlaceImgLink = document.querySelector(".popup__input_type_url");
 const cardImage = document.querySelector(".popup__image");
 const cardCaption = document.querySelector(".popup__caption");
 const popups = document.querySelectorAll(".popup");
+
 const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -56,9 +57,9 @@ Promise.all(promises)
 //Включение валидации
 validation.enableValidation(validationConfig);
 const setUserInfo = (userInfo) => {
-  dom.profileImageElement.style.backgroundImage = `url("${userInfo.avatar}")`;
-  dom.profileTitle.textContent = userInfo.name;
-  dom.profileDescription.textContent = userInfo.about;
+  profileImageElement.style.backgroundImage = `url("${userInfo.avatar}")`;
+  profileTitle.textContent = userInfo.name;
+  profileDescription.textContent = userInfo.about;
 };
 
 function handleProfileFormSubmit(evt) {
@@ -117,7 +118,6 @@ function handleFormNewPlaceSubmit(evt) {
     .catch((err) => {
       console.error("Error:", err);
     });
-  
 }
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);
 profileAddButton.addEventListener("click", (evt) => {
@@ -135,7 +135,7 @@ function handleFormEditAvatarSubmit(evt) {
   api
     .patchUserAvatar(formInputAvatarImgLink.value)
     .then((userInfo) => {
-      setUserInfo(userInfo);      
+      setUserInfo(userInfo);
       closePopup(popupTypeNewAvatar);
       formEditAvatar.reset();
     })
